@@ -5,15 +5,30 @@ export function fetchData({proxyURL, targetURL}) {
 }
 
 export function getCurrentSamples (samplesArray) {
-  const currentYearSamples = samplesArray.filter(
-    (sample) => sample.date > new Date(2019, 12, 31)
-  )
 
-  const groupedSamples = groupSamplesByStation(currentYearSamples)
-
+  const filteredSamples = get2020Samples(samplesArray)
+  const groupedSamples = groupSamplesByStation(filteredSamples)
   const latestSamples = getLatestStationSamples(groupedSamples)
 
   return latestSamples
+}
+
+function get2020Samples (samplesArray) {
+  const datedSamples = samplesArray.map((sample) => {
+    const dateArray = sample.DATUMMESSUNG ? sample.DATUMMESSUNG.split('.') : ''
+    sample.DATUMMESSUNG = new Date(
+      dateArray[2],
+      dateArray[1] - 1,
+      dateArray[0]
+    )
+    return sample
+  })
+
+  const currentYearSamples = datedSamples.filter(
+    (sample) => sample.DATUMMESSUNG > new Date(2019, 12, 31)
+  )
+
+  return currentYearSamples
 }
 
 function getLatestStationSamples(samples) {
@@ -38,7 +53,7 @@ function getLatestStationSamples(samples) {
 
 function groupSamplesByStation(samples) {
   const groupedSamples = samples.reduce((acc, crr) => {
-    ;(acc[crr['id']] = acc[crr['id']] || []).push(crr)
+    ;(acc[crr['BADEGEWAESSERID']] = acc[crr['BADEGEWAESSERID']] || []).push(crr)
     return acc
   }, [])
   return groupedSamples
@@ -50,9 +65,11 @@ export function csvToArray({csv, keys}) {
   let waterSamples = []
   waterSamples = linesArray.map((line) => {
     const attributesArray = line.split('|')
+    
 
     const waterSampleObject = {}
-    keys.forEach((key, index) => waterSampleObject[key] = attributesArray[index-1])
+    keys.forEach((key, index) => waterSampleObject[key] = attributesArray[index])
+  
 
     return waterSampleObject
   })

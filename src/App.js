@@ -6,7 +6,7 @@ import {
   getCurrentSamples,
   csvToArray,
 } from './components/utils'
-import { placesKeys } from './attributeKeys'
+import { placesKeys, samplesKeys } from './attributeKeys'
 
 export default function App() {
   const proxyURL = 'https://cors-anywhere.herokuapp.com/'
@@ -19,7 +19,7 @@ export default function App() {
 
   useEffect(() => {
     fetchData({ proxyURL, targetURL: samplesURL })
-      .then((response) => samplesCsvToArray(response))
+      .then((response) => csvToArray({csv: response, keys: samplesKeys}))
       .then((array) => setSamples(getCurrentSamples(array)))
       .catch((error) => console.log('error', error))
 
