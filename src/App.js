@@ -9,7 +9,7 @@ function App() {
     .then(response => response.text())
     .then(result => {
       const waterSamples = samplesCsvToArray(result)
-
+      
       const filteredSamples = waterSamples.filter(sample => sample.date > new Date(2019, 12, 31))
       console.log(filteredSamples)
       })
@@ -28,8 +28,7 @@ function App() {
       waterSampleObject.waterTemp = attributesArray[12]
 
       const dateArray = attributesArray[8] ? attributesArray[8].split('.') : ''
-      waterSampleObject.date = new Date(dateArray[2], dateArray[1], dateArray[0])
-      
+      waterSampleObject.date = new Date(dateArray[2], dateArray[1]-1, dateArray[0])
       return waterSampleObject
     })
     
