@@ -1,46 +1,77 @@
-import React from 'react';
-import './App.css';
+import React from 'react'
+import './App.css'
 
 const proxyURL = 'https://cors-anywhere.herokuapp.com/'
-const targetURL = 'http://efi2.schleswig-holstein.de/bg/opendata/v_proben_odata.csv'
+const targetURL =
+  'http://efi2.schleswig-holstein.de/bg/opendata/v_proben_odata.csv'
 
-function App() {
+export default function App() {
   fetch(proxyURL + targetURL)
-    .then(response => response.text())
-    .then(result => {
+    .then((response) => response.text())
+    .then((result) => {
       const waterSamples = samplesCsvToArray(result)
-      
-      const filteredSamples = waterSamples.filter(sample => sample.date > new Date(2019, 12, 31))
-      console.log(filteredSamples)
-      })
-    .catch(error => console.log('error', error))
 
-  function samplesCsvToArray(csv) {
-    const linesArray = csv.split('\n')
+      const currentYearSamples = waterSamples.filter(
+        (sample) => sample.date > new Date(2019, 12, 31)
+      )
 
-    let waterSamples = []
-    waterSamples = linesArray.map((line) => {
-      const attributesArray = line.split('|')
+      const groupedSamples = groupSamplesByStation(currentYearSamples)
 
-      const waterSampleObject = {}
-      waterSampleObject.id = attributesArray[0]
-      waterSampleObject.name = attributesArray[1]
-      waterSampleObject.waterTemp = attributesArray[12]
-
-      const dateArray = attributesArray[8] ? attributesArray[8].split('.') : ''
-      waterSampleObject.date = new Date(dateArray[2], dateArray[1]-1, dateArray[0])
-      return waterSampleObject
+      const latestSamples = getLatestStationSamples(groupedSamples)
     })
-    
-    //console.log(waterSamples[5])
-    return waterSamples
-  }
+    .catch((error) => console.log('error', error))
 
-  return (
-    <div className="App">
-      
-    </div>
-  );
+  return <div className="App"></div>
 }
 
-export default App;
+function getLatestStationSamples(samples) {
+  const array = []
+  const keys = Object.keys(samples)
+  keys.forEach((key) => {
+    array.push(samples[key])
+  })
+
+  const latestSamples = array.map((stationSamples) => {
+    let acc = stationSamples[0]
+    stationSamples.forEach((crr) => {
+      if (acc.date < crr.date) {
+        acc = crr
+      }
+    })
+    return acc
+  })
+
+  return latestSamples
+}
+
+function groupSamplesByStation(samples) {
+  const groupedSamples = samples.reduce((acc, crr) => {
+    ;(acc[crr['id']] = acc[crr['id']] || []).push(crr)
+    return acc
+  }, [])
+  return groupedSamples
+}
+
+function samplesCsvToArray(csv) {
+  const linesArray = csv.split('\n')
+
+  let waterSamples = []
+  waterSamples = linesArray.map((line) => {
+    const attributesArray = line.split('|')
+
+    const waterSampleObject = {}
+    waterSampleObject.id = attributesArray[0]
+    waterSampleObject.name = attributesArray[1]
+    waterSampleObject.waterTemp = attributesArray[12]
+
+    const dateArray = attributesArray[8] ? attributesArray[8].split('.') : ''
+    waterSampleObject.date = new Date(
+      dateArray[2],
+      dateArray[1] - 1,
+      dateArray[0]
+    )
+    return waterSampleObject
+  })
+
+  return waterSamples
+}
