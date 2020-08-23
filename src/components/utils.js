@@ -4,11 +4,8 @@ export function fetchData({proxyURL, targetURL}) {
   .catch((error) => console.log('error', error))
 }
 
-export function processCSVData (csvData) {
-
-  const waterSamples = samplesCsvToArray(csvData)
-
-  const currentYearSamples = waterSamples.filter(
+export function getCurrentSamples (samplesArray) {
+  const currentYearSamples = samplesArray.filter(
     (sample) => sample.date > new Date(2019, 12, 31)
   )
 
@@ -47,7 +44,23 @@ function groupSamplesByStation(samples) {
   return groupedSamples
 }
 
-function samplesCsvToArray(csv) {
+export function csvToArray({csv, keys}) {
+  const linesArray = csv.split('\n')
+
+  let waterSamples = []
+  waterSamples = linesArray.map((line) => {
+    const attributesArray = line.split('|')
+
+    const waterSampleObject = {}
+    keys.forEach((key, index) => waterSampleObject[key] = attributesArray[index-1])
+
+    return waterSampleObject
+  })
+
+  return waterSamples
+}
+
+export function samplesCsvToArray(csv) {
   const linesArray = csv.split('\n')
 
   let waterSamples = []
@@ -65,6 +78,7 @@ function samplesCsvToArray(csv) {
       dateArray[1] - 1,
       dateArray[0]
     )
+
     return waterSampleObject
   })
 
