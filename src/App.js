@@ -8,6 +8,8 @@ import {
 } from './components/utils'
 import { placesKeys, samplesKeys } from './attributeKeys'
 import LeafletMap from './components/LeafletMap'
+import styled from 'styled-components'
+import welcomeImage from './images/meer.jpg'
 
 export default function App() {
   const proxyURL = 'https://cors-anywhere.herokuapp.com/'
@@ -39,7 +41,46 @@ export default function App() {
 
   return (
     <div className="App">
+      <WelcomeSection>
+        <Headline>Badegewässerqualität in Schleswig Holstein</Headline>
+        <SubHeadline>Über 300 Messtellen mit aktuellen Werten</SubHeadline>
+        <Button>Zur Karte</Button>
+      </WelcomeSection>
       <LeafletMap samples={samples} />
     </div>
   )
 }
+
+const Headline = styled.h1`
+  color: white;
+  font-size: 35px;
+  font-weight: 300;
+`
+
+const SubHeadline = styled.h2`
+  color: white;
+  font-size: 20px;
+`
+
+const Button = styled.button`
+  text-decoration: none;
+  color: #fff;
+  background-color: #e63946;
+  text-align: center;
+  border: none;
+  border-radius: 2px;
+  height: 36px;
+  line-height: 36px;
+  padding: 0 16px;
+  margin: 20px 0px 0px 0px;
+  text-transform: uppercase;
+  text-align: center;
+  margin: 20px;
+`
+
+const WelcomeSection = styled.section`
+  height: 100vh;
+  background: url('${welcomeImage}')no-repeat center center fixed; 
+  background-size: cover;
+  padding: 100px 0 0 0;
+`
