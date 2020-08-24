@@ -10,7 +10,7 @@ import { placesKeys, samplesKeys } from './attributeKeys'
 import LeafletMap from './components/LeafletMap'
 import styled from 'styled-components'
 import welcomeImage from './images/meer.jpg'
-import { Switch, Route } from 'react-router-dom'
+import { Switch, Route, Link } from 'react-router-dom'
 
 export default function App() {
   const proxyURL = 'https://cors-anywhere.herokuapp.com/'
@@ -46,12 +46,14 @@ export default function App() {
         <Route path="/map">
           <LeafletMap samples={samples} />
         </Route>
-        
+
         <Route path="/">
           <WelcomeSection>
             <Headline>Badegewässerqualität in Schleswig Holstein</Headline>
             <SubHeadline>Über 300 Messtellen mit aktuellen Werten</SubHeadline>
-            <Button>Zur Karte</Button>
+            <Link to="/map">
+              <Button>Zur Karte</Button>
+            </Link>
           </WelcomeSection>
         </Route>
       </Switch>
@@ -86,6 +88,7 @@ const Button = styled.button`
   text-transform: uppercase;
   text-align: center;
   margin: 20px;
+  cursor: pointer;
 `
 
 const WelcomeSection = styled.section`
