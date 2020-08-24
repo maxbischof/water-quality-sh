@@ -4,7 +4,7 @@ import { Map, Marker, Popup, TileLayer } from 'react-leaflet'
 export default function LeafletMap({ samples }) {
   const samplesMarker = samples.map((sample) => {
     const latLong = [sample.GEOGR_BREITE, sample.GEOGR_LAENGE]
-    
+
     return (
       <Marker key={sample.BADEGEWAESSERID} position={latLong}>
         <Popup>
@@ -13,6 +13,11 @@ export default function LeafletMap({ samples }) {
           Wassertemperatur: {sample.WASSERTEMP}
           <br />
           Sichttiefe: {sample.SICHTTIEFE}
+          <br />
+          Datum:{' '}
+          {sample.DATUMMESSUNG.getDay() + '.' +
+            sample.DATUMMESSUNG.getMonth() + '.' +
+            sample.DATUMMESSUNG.getFullYear()}
         </Popup>
       </Marker>
     )
