@@ -11,7 +11,7 @@ export default function App() {
   const placesURL =
     'http://efi2.schleswig-holstein.de/bg/opendata/v_badegewaesser_odata.csv'
 
-  const [samples, setSamples] = useState()
+  const [samples, setSamples] = useState([])
 
   useEffect(() => {
     const samplesPromise = fetchData({ proxyURL, targetURL: samplesURL })
@@ -37,9 +37,7 @@ export default function App() {
     )
   }, [])
 
-  console.log(samples)
-
   return <div className="App">
-      <LeafletMap />
+      <LeafletMap samples={samples}/>
     </div>
 }
