@@ -53,7 +53,7 @@ export default function App() {
         <Route path="/">
           <WelcomeSection>
             <Headline>Badegewässerqualität in Schleswig Holstein</Headline>
-            <SubHeadline>Über 300 Messtellen mit aktuellen Werten</SubHeadline>
+            <SubHeadline>Über 300 Messstellen mit aktuellen Werten</SubHeadline>
             <Link to="/map">
               <Button>Zur Karte</Button>
             </Link>
