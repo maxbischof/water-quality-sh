@@ -1,6 +1,11 @@
 import React, { useState, useEffect } from 'react'
 import './App.css'
-import { fetchData, getCurrentSamples, csvToArray } from './components/utils'
+import {
+  fetchData,
+  getCurrentSamples,
+  csvToArray,
+  joinPositionOnSamples,
+} from './components/utils'
 import { placesKeys, samplesKeys } from './attributeKeys'
 import LeafletMap from './components/LeafletMap'
 
@@ -23,21 +28,18 @@ export default function App() {
       .then((response) => csvToArray({ csv: response, keys: placesKeys }))
       .catch((error) => console.log('error', error))
 
-    Promise.all([samplesPromise, placesPromise]).then((values) =>
-      setSamples(
-        values[0].map((sample) => {
-          const place = values[1].find(
-            (place) => place.BADEGEWAESSERID === sample.BADEGEWAESSERID
-          )
-          sample.GEOGR_BREITE = place.GEOGR_BREITE
-          sample.GEOGR_LAENGE = place.GEOGR_LAENGE
-          return sample 
-        })
-      )
-    )
+    Promise.all([samplesPromise, placesPromise]).then((values) => {
+      const samplesWithLocation = joinPositionOnSamples({
+        samples: values[0],
+        places: values[1],
+      })
+      setSamples(samplesWithLocation)
+    })
   }, [])
 
-  return <div className="App">
-      <LeafletMap samples={samples}/>
+  return (
+    <div className="App">
+      <LeafletMap samples={samples} />
     </div>
+  )
 }

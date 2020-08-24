@@ -4,6 +4,17 @@ export function fetchData({proxyURL, targetURL}) {
   .catch((error) => console.log('error', error))
 }
 
+export function joinPositionOnSamples ({samples, places}) {
+  return samples.map((sample) => {
+    const place = places.find(
+      (place) => place.BADEGEWAESSERID === sample.BADEGEWAESSERID
+    )
+    sample.GEOGR_BREITE = place.GEOGR_BREITE
+    sample.GEOGR_LAENGE = place.GEOGR_LAENGE
+    return sample 
+  })
+}
+
 export function getCurrentSamples (samplesArray) {
 
   const filteredSamples = get2020Samples(samplesArray)
