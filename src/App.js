@@ -11,6 +11,7 @@ import LeafletMap from './components/LeafletMap'
 import styled from 'styled-components'
 import welcomeImage from './images/meer.jpg'
 import { Switch, Route, Link } from 'react-router-dom'
+import MapLayout from './components/MapLayout'
 
 export default function App() {
   const proxyURL = 'https://cors-anywhere.herokuapp.com/'
@@ -44,7 +45,9 @@ export default function App() {
     <div className="App">
       <Switch>
         <Route path="/map">
-          <LeafletMap samples={samples} />
+          <MapLayout>
+            <LeafletMap samples={samples} />
+          </MapLayout>
         </Route>
 
         <Route path="/">
@@ -75,6 +78,8 @@ const SubHeadline = styled.h2`
 `
 
 const Button = styled.button`
+  font-size: 15px;
+  font-weight: bold;
   text-decoration: none;
   color: #fff;
   background-color: #e63946;
@@ -82,7 +87,6 @@ const Button = styled.button`
   border: none;
   border-radius: 2px;
   height: 36px;
-  line-height: 36px;
   padding: 0 16px;
   margin: 20px 0px 0px 0px;
   text-transform: uppercase;
